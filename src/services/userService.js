@@ -1,10 +1,16 @@
 const userRepository = require("../repositories/userRepository");
 
+const createError = (message, statusCode) => {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
+};
+
 const getProfile = async (userId) => {
   const profile = await userRepository.findProfileByUserId(userId);
 
   if (!profile) {
-    throw new Error("Profile not found");
+    throw createError("Profile not found", 404);
   }
 
   return profile;
@@ -17,10 +23,11 @@ const createProfile = async ({
   address,
   profileImage,
 }) => {
-  const existingProfile = await userRepository.findProfileByUserId(userId);
+  const existingProfile =
+    await userRepository.findProfileByUserId(userId);
 
   if (existingProfile) {
-    throw new Error("Profile already exists");
+    throw createError("Profile already exists", 409);
   }
 
   return userRepository.createProfile({
@@ -39,10 +46,11 @@ const updateProfile = async ({
   address,
   profileImage,
 }) => {
-  const existingProfile = await userRepository.findProfileByUserId(userId);
+  const existingProfile =
+    await userRepository.findProfileByUserId(userId);
 
   if (!existingProfile) {
-    throw new Error("Profile not found");
+    throw createError("Profile not found", 404);
   }
 
   return userRepository.updateProfile({

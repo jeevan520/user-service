@@ -1,6 +1,11 @@
 const express = require("express");
 
 const authMiddleware = require("../middleware/authMiddleware");
+const validationMiddleware = require("../middleware/validationMiddleware");
+
+const {
+  profileValidation,
+} = require("../validators/profileValidator");
 
 const {
   getProfile,
@@ -10,13 +15,29 @@ const {
 
 const router = express.Router();
 
-// Get logged-in user's profile
-router.get("/me", authMiddleware, getProfile);
+// Get profile
+router.get(
+  "/me",
+  authMiddleware,
+  getProfile
+);
 
-// Create logged-in user's profile
-router.post("/profile", authMiddleware, createProfile);
+// Create profile
+router.post(
+  "/profile",
+  authMiddleware,
+  profileValidation,
+  validationMiddleware,
+  createProfile
+);
 
-// Update logged-in user's profile
-router.put("/me", authMiddleware, updateProfile);
+// Update profile
+router.put(
+  "/me",
+  authMiddleware,
+  profileValidation,
+  validationMiddleware,
+  updateProfile
+);
 
 module.exports = router;

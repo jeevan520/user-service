@@ -1,6 +1,6 @@
 const userService = require("../services/userService");
 
-const getProfile = async (req, res) => {
+const getProfile = async (req, res, next) => {
   try {
     const userId = req.user.userId;
 
@@ -12,16 +12,11 @@ const getProfile = async (req, res) => {
       user: profile,
     });
   } catch (error) {
-    console.error("Get profile error:", error.message);
-
-    res.status(404).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const createProfile = async (req, res) => {
+const createProfile = async (req, res, next) => {
   try {
     const userId = req.user.userId;
 
@@ -31,13 +26,6 @@ const createProfile = async (req, res) => {
       address,
       profileImage,
     } = req.body;
-
-    if (!name) {
-      return res.status(400).json({
-        success: false,
-        message: "Name is required",
-      });
-    }
 
     const profile = await userService.createProfile({
       userId,
@@ -53,17 +41,12 @@ const createProfile = async (req, res) => {
       user: profile,
     });
   } catch (error) {
-    console.error("Create profile error:", error.message);
-
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const updateProfile = async (req, res) => {
-    try {
+const updateProfile = async (req, res, next) => {
+  try {
     const userId = req.user.userId;
 
     const {
@@ -87,12 +70,7 @@ const updateProfile = async (req, res) => {
       user: profile,
     });
   } catch (error) {
-    console.error("Update profile error:", error.message);
-
-    res.status(404).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 

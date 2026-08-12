@@ -4,6 +4,7 @@ const express = require("express");
 
 const { port } = require("./config/env");
 const userRoutes = require("./routes/userRoutes");
+const errorMiddleware = require("./middleware/errorMiddleware");
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.get("/health", (req, res) => {
     message: "User Service is running",
   });
 });
+
+app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log(`User Service running on http://localhost:${port}`);
